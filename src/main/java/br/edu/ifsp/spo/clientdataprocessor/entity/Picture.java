@@ -1,6 +1,7 @@
 package br.edu.ifsp.spo.clientdataprocessor.entity;
 
 
+import br.edu.ifsp.spo.clientdataprocessor.dto.PictureForm;
 import lombok.*;
 import jakarta.persistence.*;
 
@@ -33,4 +34,19 @@ public class Picture {
 
     @Column(name = "stActive")
     private Boolean isActive;
+
+    public Picture(User user, PictureForm form) {
+        this.user = user;
+        this.largeUrl = form.getLargeUrl();
+        this.mediumUrl = form.getMediumUrl();
+        this.thumbnailUrl = form.getLargeUrl();
+        this.isActive = true;
+    }
+
+    public void update(User user, PictureForm form) {
+        this.user = user;
+        this.largeUrl = form.getLargeUrl();
+        this.mediumUrl = form.getMediumUrl();
+        this.thumbnailUrl = form.getLargeUrl();
+    }
 }

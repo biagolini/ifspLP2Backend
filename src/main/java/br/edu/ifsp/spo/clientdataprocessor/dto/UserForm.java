@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class UserForm {
-    private Integer id;
+    private Long id;
     private Long idTypeGender;
     private String title;
     private String firstName;

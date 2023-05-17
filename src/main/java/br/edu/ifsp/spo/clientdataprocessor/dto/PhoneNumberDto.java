@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class PhoneNumberDto {
-    private Integer id;
+    private Long id;
     private Long userId;
     private String userFirstName;
     private String userLastName;
@@ -19,7 +19,7 @@ public class PhoneNumberDto {
 
     public PhoneNumberDto(PhoneNumber phoneNumber) {
         this.id = phoneNumber.getId();
-        this.userId = Long.valueOf(phoneNumber.getUser().getId());
+        this.userId = phoneNumber.getUser().getId();
         this.userFirstName = phoneNumber.getUser().getFirstName();
         this.userLastName = phoneNumber.getUser().getLastName();
         this.useremail = phoneNumber.getUser().getEmail();

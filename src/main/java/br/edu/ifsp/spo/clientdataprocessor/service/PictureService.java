@@ -1,17 +1,27 @@
 package br.edu.ifsp.spo.clientdataprocessor.service;
 
+import br.edu.ifsp.spo.clientdataprocessor.dto.PictureDto;
+import br.edu.ifsp.spo.clientdataprocessor.dto.PictureForm;
 import br.edu.ifsp.spo.clientdataprocessor.entity.Picture;
+import br.edu.ifsp.spo.clientdataprocessor.entity.User;
 import br.edu.ifsp.spo.clientdataprocessor.repository.PictureRepository;
+import br.edu.ifsp.spo.clientdataprocessor.repository.UserRepository;
 import br.edu.ifsp.spo.clientdataprocessor.repository.specifications.PictureSpecification;
+
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @AllArgsConstructor
 @Service
 public class PictureService {
+
     private final PictureRepository pictureRepository;
+
+    private final UserRepository userRepository;
 
     public Page<Picture> findAll(Pageable pageable) {
         return this.pictureRepository.findAll(PictureSpecification.isActive(), pageable);
@@ -19,6 +29,32 @@ public class PictureService {
 
     public Page<Picture> findAll(Pageable pageable, String query, Long userId) {
         return this.pictureRepository.findAll(PictureSpecification.likeGenericQuery(query,  userId), pageable);
+    }
+
+
+    public PictureDto findPictureById(Long id) {
+        Picture picture = pictureRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        PictureDto response = new PictureDto(picture);
+        return  response;
+    }
+
+    public void createPicture(PictureForm form) {
+        User user = userRepository.findById(form.getUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        Picture newRegister = new Picture(user, form);
+        pictureRepository.save(newRegister);
+    }
+
+    public void inactivePicture(Long id) {
+        Picture picture = pictureRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        picture.setIsActive(false);
+        pictureRepository.save(picture);
+    }
+
+    public void updatePicture(Long id, PictureForm form) {
+        User user = userRepository.findById(form.getUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        Picture picture = pictureRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        picture.update(user, form);
+        pictureRepository.save(picture);
     }
 
 }

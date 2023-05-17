@@ -1,15 +1,18 @@
 package br.edu.ifsp.spo.clientdataprocessor.controller;
 
 import br.edu.ifsp.spo.clientdataprocessor.dto.UserDto;
+import br.edu.ifsp.spo.clientdataprocessor.dto.UserForm;
 import br.edu.ifsp.spo.clientdataprocessor.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @RequestMapping("api/user")
@@ -43,6 +46,31 @@ public class UserController {
                 .findAll(pageable, query, idLocationType, idRegionType, latitudeMax,  latitudeMin,  longitudeMax,  longitudeMin)
                 .map(entity -> this.conversionService.convert(entity, UserDto.class));
         return pageReturnObject;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findUserById(@PathVariable Long id) {
+        UserDto response = this.userService.findUserById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    @PostMapping()
+    public ResponseEntity<?> createCustomer(@RequestBody UserForm form) {
+        this.userService.createUser(form);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<?> inactiveCustomer(@PathVariable Long id) {
+        this.userService.inactiveUser(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<?> updateCustomer(@PathVariable Long id, @RequestBody UserForm form) {
+        this.userService.updateUser(id, form);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

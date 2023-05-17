@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class PhoneNumberForm {
-    private Integer id;
-    private User user;
+    private Long id;
+    private Long userId;
     private String phoneNumber;
     private Long idPhoneNumberType;
 

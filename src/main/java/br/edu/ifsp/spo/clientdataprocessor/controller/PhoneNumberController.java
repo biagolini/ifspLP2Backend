@@ -1,13 +1,17 @@
 package br.edu.ifsp.spo.clientdataprocessor.controller;
 
 import br.edu.ifsp.spo.clientdataprocessor.dto.PhoneNumberDto;
+import br.edu.ifsp.spo.clientdataprocessor.dto.PhoneNumberForm;
 import br.edu.ifsp.spo.clientdataprocessor.service.PhoneNumberService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,11 +39,34 @@ public class PhoneNumberController {
             return pageReturnObject;
         }
 
-
         Page<PhoneNumberDto> pageReturnObject = this.phoneNumberService
                 .findAll(pageable, query, idPhoneNumberType, userId) // busca pela query
                 .map(entity -> this.conversionService.convert(entity, PhoneNumberDto.class));
         return pageReturnObject;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findPhoneNumberById(@PathVariable Long id) {
+        PhoneNumberDto response = this.phoneNumberService.findPhoneNumberById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    @PostMapping()
+    public ResponseEntity<?> createPhone(@RequestBody PhoneNumberForm form) {
+        this.phoneNumberService.createPhoneNumber(form);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<?> inactivePhone(@PathVariable Long id) {
+        this.phoneNumberService.inactivePhoneNumber(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<?> updatePhone(@PathVariable Long id, @RequestBody PhoneNumberForm form) {
+        this.phoneNumberService.updatePhoneNumber(id, form);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

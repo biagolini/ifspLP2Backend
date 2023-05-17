@@ -1,5 +1,6 @@
 package br.edu.ifsp.spo.clientdataprocessor.entity;
 
+import br.edu.ifsp.spo.clientdataprocessor.dto.PhoneNumberForm;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,7 +17,7 @@ public class PhoneNumber {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idPhoneNumber")
-    private Integer id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "idUser")
@@ -30,5 +31,18 @@ public class PhoneNumber {
 
     @Column(name = "stActive")
     private Boolean isActive;
+
+    public PhoneNumber(User user, PhoneNumberForm form) {
+        this.user = user;
+        this.phoneNumber = form.getPhoneNumber();
+        this.idPhoneNumberType = form.getIdPhoneNumberType();
+        this.isActive = true;
+    }
+
+    public void update(User user, PhoneNumberForm form) {
+        this.user = user;
+        this.phoneNumber = form.getPhoneNumber();
+        this.idPhoneNumberType = form.getIdPhoneNumberType();
+    }
 
 }

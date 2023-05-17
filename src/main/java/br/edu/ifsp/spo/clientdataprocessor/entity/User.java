@@ -1,5 +1,6 @@
 package br.edu.ifsp.spo.clientdataprocessor.entity;
 
+import br.edu.ifsp.spo.clientdataprocessor.dto.UserForm;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,7 +19,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idUser")
-    private Integer id;
+    private Long id;
 
     @Column(name =  "idTypeGender")
     private Long idTypeGender;
@@ -73,5 +74,47 @@ public class User {
 
     @Column(name = "stActive")
     private Boolean isActive;
+
+    public User(UserForm form) {
+        this.idTypeGender = form.getIdTypeGender();
+        this.title = form.getTitle();
+        this.firstName = form.getFirstName();
+        this.lastName = form.getLastName();
+        this.idLocationType = form.getIdLocationType();
+        this.idRegionType = form.getIdRegionType();
+        this.street = form.getStreet();
+        this.city = form.getCity();
+        this.idTypeState = form.getIdTypeState();
+        this.postcode = form.getPostcode();
+        this.latitude = form.getLatitude();
+        this.longitude = form.getLongitude();
+        this.idTypeTimezone = form.getIdTypeTimezone();
+        this.email = form.getEmail();
+        this.birthday = form.getBirthday();
+        this.registered = form.getRegistered();
+        this.idTypeNationality = form.getIdTypeNationality();
+        this.isActive = true;
+    }
+
+
+    public void update(UserForm form) {
+        this.idTypeGender = form.getIdTypeGender();
+        this.title = form.getTitle();
+        this.firstName = form.getFirstName();
+        this.lastName = form.getLastName();
+        this.idLocationType = form.getIdLocationType();
+        this.idRegionType = form.getIdRegionType();
+        this.street = form.getStreet();
+        this.city = form.getCity();
+        this.idTypeState = form.getIdTypeState();
+        this.postcode = form.getPostcode();
+        this.latitude = form.getLatitude();
+        this.longitude = form.getLongitude();
+        this.idTypeTimezone = form.getIdTypeTimezone();
+        this.email = form.getEmail();
+        this.birthday = form.getBirthday();
+        this.registered = form.getRegistered();
+        this.idTypeNationality = form.getIdTypeNationality();
+    }
 
 }
