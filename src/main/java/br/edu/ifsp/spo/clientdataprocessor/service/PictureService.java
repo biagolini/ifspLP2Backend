@@ -51,8 +51,8 @@ public class PictureService {
     }
 
     public void updatePicture(Long id, PictureForm form) {
-        User user = userRepository.findById(form.getUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-        Picture picture = pictureRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        Picture picture = pictureRepository.findById(user.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         picture.update(user, form);
         pictureRepository.save(picture);
     }

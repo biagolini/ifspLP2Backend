@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class PictureForm {
-    private Long id;
     private Long userId;
     private String largeUrl;
     private String mediumUrl;
