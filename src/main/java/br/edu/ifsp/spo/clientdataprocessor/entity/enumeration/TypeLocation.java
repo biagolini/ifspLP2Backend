@@ -14,7 +14,7 @@ public class TypeLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idLocationType")
-    private Integer id;
+    private Long id;
 
     @Column(name = "dsType")
     private String description;

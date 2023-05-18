@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TypeStateDto {
 
-    private Integer id;
+    private Long id;
     private String abbreviation;
     private String description;
 

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class TypePhoneNumberDto {
-    private Integer id;
+    private Long id;
     private String description;
 
     public TypePhoneNumberDto(TypePhoneNumber typePhoneNumber) {

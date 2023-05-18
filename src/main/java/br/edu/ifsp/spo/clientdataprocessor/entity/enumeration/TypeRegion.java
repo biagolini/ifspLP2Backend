@@ -14,7 +14,7 @@ public class TypeRegion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idRegionType")
-    private Integer id;
+    private Long id;
 
     @Column(name = "dsType")
     private String description;

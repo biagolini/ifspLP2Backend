@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class TypeGenderDto {
-    private Integer id;
+    private Long id;
     private String description;
 
     public TypeGenderDto(TypeGender typeGender) {

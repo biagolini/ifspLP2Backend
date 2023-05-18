@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TypeTimeZoneDto {
 
-    private Integer id;
+    private Long id;
     private String timezoneOffset;
     private String timezoneDescription;
 

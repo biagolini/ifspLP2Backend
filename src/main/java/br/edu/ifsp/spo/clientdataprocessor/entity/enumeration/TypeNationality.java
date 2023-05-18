@@ -13,7 +13,7 @@ public class TypeNationality {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idTypeNationality")
-    private Integer id;
+    private Long id;
 
     @Column(name = "dsAbbreviation")
     private String abbreviation;

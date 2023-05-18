@@ -14,7 +14,7 @@ public class TypeState {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idTypeState")
-    private Integer id;
+    private Long id;
 
     @Column(name = "dsAbbreviation")
     private String abbreviation;

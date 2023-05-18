@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class TypeLocationDto {
-    private Integer id;
+    private Long id;
     private String description;
 
     public TypeLocationDto(TypeLocation typeLocation) {

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class TypeNationalityDto {
-    private Integer id;
+    private Long id;
     private String abbreviation;
     private String description;
 

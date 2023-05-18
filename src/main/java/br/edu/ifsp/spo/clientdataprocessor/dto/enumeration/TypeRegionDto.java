@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class TypeRegionDto {
-    private Integer id;
+    private Long id;
     private String description;
 
     public TypeRegionDto(TypeRegion typeRegion) {

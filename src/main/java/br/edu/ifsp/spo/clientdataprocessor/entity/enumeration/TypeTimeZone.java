@@ -14,7 +14,7 @@ public class TypeTimeZone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idTypeTimezone")
-    private Integer id;
+    private Long id;
 
     @Column(name = "dsTimezoneOffset")
     private String timezoneOffset;

@@ -3,7 +3,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "tblTypeGender")
+@Table(name = "tblTypeLogin")
 @Builder
 @Getter
 @Setter
@@ -13,7 +13,7 @@ public class TypeLogin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idLocationType")
-    private Integer id;
+    private Long id;
 
     @Column(name = "dsType")
     private String description;
