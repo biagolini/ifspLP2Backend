@@ -1,5 +1,7 @@
 package br.edu.ifsp.spo.clientdataprocessor.dto;
 
+import br.edu.ifsp.spo.clientdataprocessor.entity.PhoneNumber;
+import br.edu.ifsp.spo.clientdataprocessor.entity.Picture;
 import br.edu.ifsp.spo.clientdataprocessor.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,7 @@ public class UserDto {
     private LocalDateTime birthday;
     private LocalDateTime registered;
     private Long idTypeNationality;
+    private String thumbnailUrl;
 
     public UserDto(User user) {
         this.id = user.getId();

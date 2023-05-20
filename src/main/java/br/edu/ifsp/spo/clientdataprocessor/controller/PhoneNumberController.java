@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/phone")
 @AllArgsConstructor
@@ -50,6 +52,13 @@ public class PhoneNumberController {
         PhoneNumberDto response = this.phoneNumberService.findPhoneNumberById(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+    @GetMapping("/findByUserId/{id}")
+    public ResponseEntity<?> findPhoneNumberByUserId(@PathVariable Long id) {
+        List<PhoneNumberDto> response = this.phoneNumberService.findPhoneNumberByUserId(id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
     @PostMapping()
     public ResponseEntity<?> createPhone(@RequestBody PhoneNumberForm form) {
         this.phoneNumberService.createPhoneNumber(form);

@@ -39,12 +39,15 @@ public class UserController {
             Page<UserDto> pageReturnObject = this.userService
                     .findAll(pageable)
                     .map(entity -> this.conversionService.convert(entity, UserDto.class));
+            pageReturnObject = this.userService.fillMissingDtoData(pageReturnObject);
+
             return pageReturnObject;
         }
 
         Page<UserDto> pageReturnObject = this.userService
                 .findAll(pageable, query, idLocationType, idRegionType, latitudeMax,  latitudeMin,  longitudeMax,  longitudeMin)
                 .map(entity -> this.conversionService.convert(entity, UserDto.class));
+        pageReturnObject = this.userService.fillMissingDtoData(pageReturnObject);
         return pageReturnObject;
     }
 

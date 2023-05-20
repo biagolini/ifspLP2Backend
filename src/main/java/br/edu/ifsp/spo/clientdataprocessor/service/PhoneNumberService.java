@@ -14,6 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @AllArgsConstructor
 @Service
 public class PhoneNumberService  {
@@ -33,6 +37,17 @@ public class PhoneNumberService  {
     public PhoneNumberDto findPhoneNumberById(Long id) {
         PhoneNumber phoneNumber = phoneNumberRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         PhoneNumberDto response = new PhoneNumberDto(phoneNumber);
+        return  response;
+    }
+
+    public List<PhoneNumberDto> findPhoneNumberByUserId(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        List<PhoneNumber> phoneNumberList = phoneNumberRepository.findByUser(user);
+        List<PhoneNumberDto> response = new ArrayList<>();
+        for(PhoneNumber item: phoneNumberList){
+            PhoneNumberDto newValue = new PhoneNumberDto(item);
+            response.add(newValue);
+        }
         return  response;
     }
 

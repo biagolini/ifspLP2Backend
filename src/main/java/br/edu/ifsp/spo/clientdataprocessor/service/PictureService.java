@@ -1,7 +1,9 @@
 package br.edu.ifsp.spo.clientdataprocessor.service;
 
+import br.edu.ifsp.spo.clientdataprocessor.dto.PhoneNumberDto;
 import br.edu.ifsp.spo.clientdataprocessor.dto.PictureDto;
 import br.edu.ifsp.spo.clientdataprocessor.dto.PictureForm;
+import br.edu.ifsp.spo.clientdataprocessor.entity.PhoneNumber;
 import br.edu.ifsp.spo.clientdataprocessor.entity.Picture;
 import br.edu.ifsp.spo.clientdataprocessor.entity.User;
 import br.edu.ifsp.spo.clientdataprocessor.repository.PictureRepository;
@@ -14,6 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -37,6 +42,17 @@ public class PictureService {
         PictureDto response = new PictureDto(picture);
         return  response;
     }
+    public PictureDto findPictureByUserId(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        List<Picture> pictureList = pictureRepository.findByUser(user);
+        PictureDto response = new PictureDto();
+        if (!pictureList.isEmpty()) {
+            Picture lastPicture = pictureList.get(pictureList.size() - 1);
+            response.update(lastPicture);
+        }
+        return  response;
+    }
+
 
     public void createPicture(PictureForm form) {
         User user = userRepository.findById(form.getUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
@@ -56,5 +72,6 @@ public class PictureService {
         picture.update(user, form);
         pictureRepository.save(picture);
     }
+
 
 }
