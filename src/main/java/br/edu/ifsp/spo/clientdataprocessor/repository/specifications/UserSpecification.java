@@ -46,18 +46,24 @@ public class UserSpecification {
         return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThan(root.get(User_.latitude), info);
     }
 
-    // email
-    public static Specification<User> emailEquals(String info) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(User_.email), "%" + info + "%");
+    // Search in email, firstName or lastName
+    public static Specification<User> searchInEmailNameSurname(String info) {
+        return (root, query, criteriaBuilder) -> {
+            Predicate emailLike = criteriaBuilder.like(root.get(User_.email), "%" + info + "%");
+            Predicate firstNameLike = criteriaBuilder.like(root.get(User_.firstName), "%" + info + "%");
+            Predicate lastNameLike = criteriaBuilder.like(root.get(User_.lastName), "%" + info + "%");
+            return criteriaBuilder.or(emailLike, firstNameLike, lastNameLike);
+        };
     }
-
 
 
     public static Specification<User> likeGenericQuery(String queryString, Long idLocationType, Long idRegionType, Double latitudeMax, Double latitudeMin, Double longitudeMax, Double longitudeMin) {
         return (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>(9);
-            // Pesquisa por email
-            if (queryString != null) predicates.add(emailEquals(queryString).toPredicate(root, query, criteriaBuilder));
+            List<Predicate> predicates = new ArrayList<>();
+            // Pesquisa por email, firstName ou lastName
+            if (queryString != null) {
+                predicates.add(searchInEmailNameSurname(queryString).toPredicate(root, query, criteriaBuilder));
+            }
             // Filtra tipo de localização igual valor especificado
             if (idLocationType != null) predicates.add(idLocationTypedEquals(idLocationType).toPredicate(root, query, criteriaBuilder));
             // Filtra tipo de região igual valor especificado
@@ -75,5 +81,6 @@ public class UserSpecification {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
+
 
 }
