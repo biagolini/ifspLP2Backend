@@ -1,7 +1,9 @@
 package br.edu.ifsp.spo.clientdataprocessor.service;
 
+import br.edu.ifsp.spo.clientdataprocessor.dto.CSVForm;
 import br.edu.ifsp.spo.clientdataprocessor.dto.UserDto;
 import br.edu.ifsp.spo.clientdataprocessor.dto.UserForm;
+import br.edu.ifsp.spo.clientdataprocessor.dto.WrapperForm;
 import br.edu.ifsp.spo.clientdataprocessor.entity.Picture;
 import br.edu.ifsp.spo.clientdataprocessor.entity.User;
 import br.edu.ifsp.spo.clientdataprocessor.repository.PictureRepository;
@@ -17,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 @AllArgsConstructor
 @Service
@@ -79,6 +82,15 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         user.update(form);
         userRepository.save(user);
+    }
+
+
+    public void createCustomerByJson(List<WrapperForm> form) {
+        System.out.println(form);
+    }
+
+    public void createCustomerByCsv(List<WrapperForm> form) {
+        System.out.println(form);
     }
 
 
