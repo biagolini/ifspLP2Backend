@@ -13,24 +13,27 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class UserDto {
+    // About user id
     private Long id;
     private Long idTypeGender;
     private String title;
     private String firstName;
     private String lastName;
-    private Long idLocationType;
-    private Long idRegionType;
+    private String email;
+    private LocalDateTime birthday;
+    private Long idTypeNationality;
+    private Long idTypeTimezone;
+    // About user location
     private String street;
     private String city;
     private Long idTypeState;
     private String postcode;
+    private Long idLocationType;
+    private Long idRegionType;
     private Double latitude;
     private Double longitude;
-    private Long idTypeTimezone;
-    private String email;
-    private LocalDateTime birthday;
+    // About our system
     private LocalDateTime registered;
-    private Long idTypeNationality;
     private String thumbnailUrl;
 
     public UserDto(User user) {

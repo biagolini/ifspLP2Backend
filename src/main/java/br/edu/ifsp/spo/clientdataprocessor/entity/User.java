@@ -91,7 +91,7 @@ public class User {
         this.idTypeTimezone = form.getIdTypeTimezone();
         this.email = form.getEmail();
         this.birthday = form.getBirthday();
-        this.registered = form.getRegistered();
+        this.registered = LocalDateTime.now();
         this.idTypeNationality = form.getIdTypeNationality();
         this.isActive = true;
     }
@@ -113,7 +113,6 @@ public class User {
         this.idTypeTimezone = form.getIdTypeTimezone();
         this.email = form.getEmail();
         this.birthday = form.getBirthday();
-        this.registered = form.getRegistered();
         this.idTypeNationality = form.getIdTypeNationality();
     }
 
