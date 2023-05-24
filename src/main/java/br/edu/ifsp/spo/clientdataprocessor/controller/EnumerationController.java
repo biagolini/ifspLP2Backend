@@ -41,12 +41,6 @@ public class EnumerationController {
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
-    @GetMapping("/getNationality")
-    public ResponseEntity<?> getNationality() {
-        List<TypeNationalityDto> dto = this.enumerationService.getNationality();
-        return ResponseEntity.status(HttpStatus.OK).body(dto);
-    }
-
     @GetMapping("/getPhoneNumber")
     public ResponseEntity<?> getPhoneNumber() {
         List<TypePhoneNumberDto> dto = this.enumerationService.getPhoneNumber();

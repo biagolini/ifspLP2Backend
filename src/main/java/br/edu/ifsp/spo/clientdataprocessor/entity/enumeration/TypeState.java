@@ -22,6 +22,9 @@ public class TypeState {
     @Column(name = "dsType")
     private String description;
 
+    @Column(name = "idRegionType")
+    private Long idRegionType;
+
     @Column(name = "stActive")
     private Boolean isActive;
 

@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -51,13 +52,13 @@ public class WrapperForm {
 
     public static class Dob {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-        public Date date;
+        public LocalDateTime date;
         public int age;
     }
 
     public static class Registered {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-        public Date date;
+        public LocalDateTime date;
         public int age;
     }
 
@@ -66,7 +67,7 @@ public class WrapperForm {
         public String medium;
         public String thumbnail;
     }
-
+/*
     public static WrapperForm toWrapperForm(CSVForm csvForm) {
         WrapperForm wrapperForm = new WrapperForm();
 
@@ -113,4 +114,6 @@ public class WrapperForm {
 
         return wrapperForm;
     }
+    */
+
 }

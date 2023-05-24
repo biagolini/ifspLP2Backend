@@ -36,9 +36,6 @@ public class User {
     @Column(name = "idLocationType")
     private Long idLocationType;
 
-    @Column(name = "idRegionType")
-    private Long idRegionType;
-
     @Column(name = "dsStreet")
     private String street;
 
@@ -69,9 +66,6 @@ public class User {
     @Column(name = "dtRegistered")
     private LocalDateTime registered;
 
-    @Column(name ="idTypeNationality")
-    private Long idTypeNationality;
-
     @Column(name = "stActive")
     private Boolean isActive;
 
@@ -81,7 +75,6 @@ public class User {
         this.firstName = form.getFirstName();
         this.lastName = form.getLastName();
         this.idLocationType = form.getIdLocationType();
-        this.idRegionType = form.getIdRegionType();
         this.street = form.getStreet();
         this.city = form.getCity();
         this.idTypeState = form.getIdTypeState();
@@ -92,10 +85,8 @@ public class User {
         this.email = form.getEmail();
         this.birthday = form.getBirthday();
         this.registered = LocalDateTime.now();
-        this.idTypeNationality = form.getIdTypeNationality();
         this.isActive = true;
     }
-
 
     public void update(UserForm form) {
         this.idTypeGender = form.getIdTypeGender();
@@ -103,7 +94,6 @@ public class User {
         this.firstName = form.getFirstName();
         this.lastName = form.getLastName();
         this.idLocationType = form.getIdLocationType();
-        this.idRegionType = form.getIdRegionType();
         this.street = form.getStreet();
         this.city = form.getCity();
         this.idTypeState = form.getIdTypeState();
@@ -113,7 +103,25 @@ public class User {
         this.idTypeTimezone = form.getIdTypeTimezone();
         this.email = form.getEmail();
         this.birthday = form.getBirthday();
-        this.idTypeNationality = form.getIdTypeNationality();
     }
 
+
+    public User(Long idTypeGender, String title, String firstName, String lastName, Long idLocationType, String street, String city, Long idTypeState, String postcode, Double latitude, Double longitude, Long idTypeTimezone, String email, LocalDateTime birthday, LocalDateTime registered) {
+        this.idTypeGender = idTypeGender;
+        this.title = title;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.idLocationType = idLocationType;
+        this.street = street;
+        this.city = city;
+        this.idTypeState = idTypeState;
+        this.postcode = postcode;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.idTypeTimezone = idTypeTimezone;
+        this.email = email;
+        this.birthday = birthday;
+        this.registered = registered;
+        this.isActive = true;
+    }
 }

@@ -15,7 +15,6 @@ public class UserForm {
     private String firstName;
     private String lastName;
     private Long idLocationType;
-    private Long idRegionType;
     private String street;
     private String city;
     private Long idTypeState;
@@ -26,7 +25,6 @@ public class UserForm {
     private String email;
     private LocalDateTime birthday;
     private LocalDateTime registered;
-    private Long idTypeNationality;
     private Boolean isActive;
 }
 

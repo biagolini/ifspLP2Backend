@@ -21,7 +21,6 @@ public class UserDto {
     private String lastName;
     private String email;
     private LocalDateTime birthday;
-    private Long idTypeNationality;
     private Long idTypeTimezone;
     // About user location
     private String street;
@@ -29,7 +28,6 @@ public class UserDto {
     private Long idTypeState;
     private String postcode;
     private Long idLocationType;
-    private Long idRegionType;
     private Double latitude;
     private Double longitude;
     // About our system
@@ -43,7 +41,6 @@ public class UserDto {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.idLocationType = user.getIdLocationType();
-        this.idRegionType = user.getIdRegionType();
         this.street = user.getStreet();
         this.city = user.getCity();
         this.idTypeState = user.getIdTypeState();
@@ -54,6 +51,5 @@ public class UserDto {
         this.email = user.getEmail();
         this.birthday = user.getBirthday();
         this.registered = user.getRegistered();
-        this.idTypeNationality = user.getIdTypeNationality();
     }
 }
