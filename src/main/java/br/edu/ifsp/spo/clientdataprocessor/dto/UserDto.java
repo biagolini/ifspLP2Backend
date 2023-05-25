@@ -3,6 +3,7 @@ package br.edu.ifsp.spo.clientdataprocessor.dto;
 import br.edu.ifsp.spo.clientdataprocessor.entity.PhoneNumber;
 import br.edu.ifsp.spo.clientdataprocessor.entity.Picture;
 import br.edu.ifsp.spo.clientdataprocessor.entity.User;
+import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeState;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class UserDto {
     private String street;
     private String city;
     private Long idTypeState;
+    private Long idRegionType;
     private String postcode;
     private Long idLocationType;
     private Double latitude;
@@ -43,7 +45,8 @@ public class UserDto {
         this.idLocationType = user.getIdLocationType();
         this.street = user.getStreet();
         this.city = user.getCity();
-        this.idTypeState = user.getIdTypeState();
+        this.idTypeState = user.getTypeState().getId();
+        this.idRegionType  = user.getTypeState().getIdRegionType();
         this.postcode = user.getPostcode();
         this.latitude = user.getLatitude();
         this.longitude = user.getLongitude();

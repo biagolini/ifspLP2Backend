@@ -1,3 +1,4 @@
+
 package br.edu.ifsp.spo.clientdataprocessor.dto.enumeration;
 
 import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeState;
@@ -13,10 +14,13 @@ public class TypeStateDto {
     private Long id;
     private String abbreviation;
     private String description;
+    private Long idRegionType;
 
     public TypeStateDto(TypeState typeState) {
         this.id = typeState.getId();
         this.abbreviation = typeState.getAbbreviation();
         this.description = typeState.getDescription();
+        this.idRegionType = typeState.getIdRegionType();
     }
+
 }

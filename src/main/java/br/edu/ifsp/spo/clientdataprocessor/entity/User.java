@@ -1,6 +1,7 @@
 package br.edu.ifsp.spo.clientdataprocessor.entity;
 
 import br.edu.ifsp.spo.clientdataprocessor.dto.UserForm;
+import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeState;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,17 +34,15 @@ public class User {
     @Column(name = "dsLastName")
     private String lastName;
 
-    @Column(name = "idLocationType")
-    private Long idLocationType;
-
     @Column(name = "dsStreet")
     private String street;
 
     @Column(name = "dsCity")
     private String city;
 
-    @Column(name = "idTypeState")
-    private Long idTypeState;
+    @ManyToOne
+    @JoinColumn(name = "idTypeState")
+    private TypeState typeState;
 
     @Column(name = "dsPostcode")
     private String postcode;
@@ -53,6 +52,9 @@ public class User {
 
     @Column(name = "dsLongitude")
     private Double longitude;
+
+    @Column(name = "idLocationType")
+    private Long idLocationType;
 
     @Column(name = "idTypeTimezone")
     private Long idTypeTimezone;
@@ -69,7 +71,7 @@ public class User {
     @Column(name = "stActive")
     private Boolean isActive;
 
-    public User(UserForm form) {
+    public User(UserForm form, TypeState TypeState) {
         this.idTypeGender = form.getIdTypeGender();
         this.title = form.getTitle();
         this.firstName = form.getFirstName();
@@ -77,7 +79,7 @@ public class User {
         this.idLocationType = form.getIdLocationType();
         this.street = form.getStreet();
         this.city = form.getCity();
-        this.idTypeState = form.getIdTypeState();
+        this.typeState = TypeState;
         this.postcode = form.getPostcode();
         this.latitude = form.getLatitude();
         this.longitude = form.getLongitude();
@@ -88,7 +90,7 @@ public class User {
         this.isActive = true;
     }
 
-    public void update(UserForm form) {
+    public void update(UserForm form, TypeState TypeState) {
         this.idTypeGender = form.getIdTypeGender();
         this.title = form.getTitle();
         this.firstName = form.getFirstName();
@@ -96,7 +98,7 @@ public class User {
         this.idLocationType = form.getIdLocationType();
         this.street = form.getStreet();
         this.city = form.getCity();
-        this.idTypeState = form.getIdTypeState();
+        this.typeState = TypeState;
         this.postcode = form.getPostcode();
         this.latitude = form.getLatitude();
         this.longitude = form.getLongitude();
@@ -105,8 +107,7 @@ public class User {
         this.birthday = form.getBirthday();
     }
 
-
-    public User(Long idTypeGender, String title, String firstName, String lastName, Long idLocationType, String street, String city, Long idTypeState, String postcode, Double latitude, Double longitude, Long idTypeTimezone, String email, LocalDateTime birthday, LocalDateTime registered) {
+    public User(Long idTypeGender, String title, String firstName, String lastName, Long idLocationType, String street, String city, TypeState TypeState, String postcode, Double latitude, Double longitude, Long idTypeTimezone, String email, LocalDateTime birthday, LocalDateTime registered) {
         this.idTypeGender = idTypeGender;
         this.title = title;
         this.firstName = firstName;
@@ -114,7 +115,7 @@ public class User {
         this.idLocationType = idLocationType;
         this.street = street;
         this.city = city;
-        this.idTypeState = idTypeState;
+        this.typeState = TypeState;
         this.postcode = postcode;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -124,4 +125,5 @@ public class User {
         this.registered = registered;
         this.isActive = true;
     }
+
 }

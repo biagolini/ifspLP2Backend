@@ -6,6 +6,7 @@ import br.edu.ifsp.spo.clientdataprocessor.dto.WrapperForm;
 import br.edu.ifsp.spo.clientdataprocessor.entity.Picture;
 import br.edu.ifsp.spo.clientdataprocessor.entity.User;
 import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeGender;
+
 import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeState;
 import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeTimeZone;
 import br.edu.ifsp.spo.clientdataprocessor.repository.PictureRepository;
@@ -40,7 +41,7 @@ public class UserService {
 
     private final TypeRegionRepository typeRegionRepository;
 
-    private final TypeStateRepository typeStateRepository;
+   private final TypeStateRepository typeStateRepository;
 
     private final TypeTimeZoneRepository typeTimeZoneRepository;
 
@@ -55,7 +56,6 @@ public class UserService {
     public Page<UserDto> fillMissingDtoData(Page<UserDto> givenPage) {
         for(UserDto item: givenPage.getContent()){
             User user = userRepository.findById(item.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
             List<Picture> pictureList = pictureRepository.findByUser(user);
             if (!pictureList.isEmpty()) {
                 Picture lastPicture = pictureList.get(pictureList.size() - 1);
@@ -76,7 +76,8 @@ public class UserService {
         if(conflictTestEmail.isPresent() ) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        User newRegister = new User(form);
+        TypeState typeState = typeStateRepository.findById(form.getIdTypeState()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        User newRegister = new User(form, typeState);
         userRepository.save(newRegister);
     }
 
@@ -93,7 +94,8 @@ public class UserService {
         }
 
         User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        user.update(form);
+        TypeState typeState = typeStateRepository.findById(form.getIdTypeState()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        user.update(form,typeState);
         userRepository.save(user);
     }
 
@@ -104,7 +106,7 @@ public class UserService {
             // Chave estrangeira
             Long idTypeGender = null;
             Long idLocationType = null;
-            Long idTypeState = null;
+            TypeState typeState = null;
             Long idTypeTimezone = null;
             // Dados
             String title = item.getName().title;
@@ -151,6 +153,8 @@ public class UserService {
                 }
             }
             // --------------------------------
+
+            /* 
             // Resolucao de estado
             System.out.println("Buscando por estado: " + item.location.state);
             Optional<TypeState> typeState = this.typeStateRepository.findByDescription(item.location.state);
@@ -159,7 +163,7 @@ public class UserService {
             } else {
                 idTypeState =  this.typeGenderRepository.findByDescription("Nao declarado").get().getId();
             }
-
+*/
             // Resolucao de TimeZone
             System.out.println("Buscando por TimeZone: " + item.location.timezone.offset + item.location.timezone.description);
             Optional<TypeTimeZone> typeTimezone = this.typeTimeZoneRepository.findByTimeZoneOffset(item.location.timezone.offset);
@@ -175,7 +179,7 @@ public class UserService {
 
 
             // Salvar usuario novo
-            User user = new User(idTypeGender,  title,  firstName,  lastName,  idLocationType,  street,  city,  idTypeState,  postcode, latitude, longitude,  idTypeTimezone,  email,  birthday,  registered);
+            User user = new User(idTypeGender,  title,  firstName,  lastName,  idLocationType,  street,  city,  typeState,  postcode, latitude, longitude,  idTypeTimezone,  email,  birthday,  registered);
             userRepository.save(user);
                 // Postar imagem (se existente)
 //            Picture newRegister = new Picture(user, form);

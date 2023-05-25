@@ -2,6 +2,8 @@ package br.edu.ifsp.spo.clientdataprocessor.repository.specifications;
 
 import br.edu.ifsp.spo.clientdataprocessor.entity.User;
 import br.edu.ifsp.spo.clientdataprocessor.entity.User_;
+
+import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeState_;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -20,9 +22,10 @@ public class UserSpecification {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(User_.idLocationType), info);
     }
 
-    // idRegionType
+
+    // idRegionType - Norte, Nordestes, Centro-Oeste, Sudestes, Sul
     public static Specification<User> idRegionTypeEquals(Long info) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(User_.idRegionType), info);
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(User_.typeState).get(TypeState_.idRegionType), info);
     }
 
     // latitudeMax

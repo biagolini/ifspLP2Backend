@@ -36,7 +36,6 @@ public class PictureService {
         return this.pictureRepository.findAll(PictureSpecification.likeGenericQuery(query,  userId), pageable);
     }
 
-
     public PictureDto findPictureById(Long id) {
         Picture picture = pictureRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         PictureDto response = new PictureDto(picture);
@@ -44,8 +43,8 @@ public class PictureService {
     }
     public PictureDto findPictureByUserId(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-        List<Picture> pictureList = pictureRepository.findByUser(user);
         PictureDto response = new PictureDto();
+        List<Picture> pictureList = pictureRepository.findByUser(user);
         if (!pictureList.isEmpty()) {
             Picture lastPicture = pictureList.get(pictureList.size() - 1);
             response.update(lastPicture);
