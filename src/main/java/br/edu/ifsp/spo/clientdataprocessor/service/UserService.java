@@ -181,13 +181,13 @@ public class UserService {
             // Salvar usuario novo
             User user = new User(idTypeGender,  title,  firstName,  lastName,  idLocationType,  street,  city,  typeState,  postcode, latitude, longitude,  idTypeTimezone,  email,  birthday,  registered);
             userRepository.save(user);
-                // Postar imagem (se existente)
-//            Picture newRegister = new Picture(user, form);
-//            pictureRepository.save(newRegister);
-//
-//            // Postar telefone (se existente)
-//            PhoneNumber newRegister = new PhoneNumber(user, form);
-//            phoneNumberRepository.save(newRegister);
+    //          Postar imagem (se existente)
+    //          Picture newRegister = new Picture(user, form);
+    //          pictureRepository.save(newRegister);
+    //
+    //            // Postar telefone (se existente)
+    //          PhoneNumber newRegister = new PhoneNumber(user, form);
+    //          phoneNumberRepository.save(newRegister);
 
         }
     }
