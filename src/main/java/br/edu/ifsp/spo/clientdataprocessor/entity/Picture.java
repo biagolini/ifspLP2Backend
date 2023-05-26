@@ -2,8 +2,8 @@ package br.edu.ifsp.spo.clientdataprocessor.entity;
 
 
 import br.edu.ifsp.spo.clientdataprocessor.dto.PictureForm;
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.*;
 
 
 @Entity
@@ -49,4 +49,13 @@ public class Picture {
         this.mediumUrl = form.getMediumUrl();
         this.thumbnailUrl = form.getLargeUrl();
     }
+
+    public Picture(User user, String largeUrl, String mediumUrl, String thumbnailUrl) {
+        this.user = user;
+        this.largeUrl = largeUrl;
+        this.mediumUrl = mediumUrl;
+        this.thumbnailUrl = thumbnailUrl;
+        this.isActive = true;
+    }
+
 }

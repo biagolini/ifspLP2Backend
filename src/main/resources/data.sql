@@ -44,10 +44,8 @@ INSERT INTO tbl_type_location (ds_type, st_active) VALUES
 
 
 INSERT INTO tbl_type_phone_number (ds_type, st_active) VALUES
-                                                           ('Movel', true),
-                                                           ('Casa', true),
-                                                           ('Trabalho', true),
-                                                           ('Outro', true),
+                                                           ('Fixo', true),
+                                                           ('Celular', true),
                                                            ('Nao declarado', true);
 
 INSERT INTO tbl_type_gender (ds_type, st_active) VALUES

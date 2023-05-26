@@ -39,6 +39,14 @@ public class PhoneNumber {
         this.isActive = true;
     }
 
+    public PhoneNumber(User user, String phoneNumber, Long idPhoneNumberType) {
+        this.user = user;
+        this.phoneNumber = phoneNumber;
+        this.idPhoneNumberType = idPhoneNumberType;
+        this.isActive = true;
+    }
+
+
     public void update(User user, PhoneNumberForm form) {
         this.user = user;
         this.phoneNumber = form.getPhoneNumber();

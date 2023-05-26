@@ -3,17 +3,17 @@ package br.edu.ifsp.spo.clientdataprocessor.service;
 import br.edu.ifsp.spo.clientdataprocessor.dto.UserDto;
 import br.edu.ifsp.spo.clientdataprocessor.dto.UserForm;
 import br.edu.ifsp.spo.clientdataprocessor.dto.WrapperForm;
+import br.edu.ifsp.spo.clientdataprocessor.entity.PhoneNumber;
 import br.edu.ifsp.spo.clientdataprocessor.entity.Picture;
 import br.edu.ifsp.spo.clientdataprocessor.entity.User;
 import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeGender;
-
 import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeState;
 import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeTimeZone;
+import br.edu.ifsp.spo.clientdataprocessor.repository.PhoneNumberRepository;
 import br.edu.ifsp.spo.clientdataprocessor.repository.PictureRepository;
 import br.edu.ifsp.spo.clientdataprocessor.repository.UserRepository;
 import br.edu.ifsp.spo.clientdataprocessor.repository.enumeration.*;
 import br.edu.ifsp.spo.clientdataprocessor.repository.specifications.UserSpecification;
-
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +33,8 @@ public class UserService {
 
     private final PictureRepository pictureRepository;
 
+    private final PhoneNumberRepository phoneNumberRepository;
+
     private final TypeGenderRepository typeGenderRepository;
 
     private final TypeLocationRepository typeLocationRepository;
@@ -44,6 +46,9 @@ public class UserService {
    private final TypeStateRepository typeStateRepository;
 
     private final TypeTimeZoneRepository typeTimeZoneRepository;
+
+
+
 
     public Page<User> findAll(Pageable pageable) {
         return this.userRepository.findAll(UserSpecification.isActive(), pageable);
@@ -103,11 +108,7 @@ public class UserService {
     public void createUserByJson(List<WrapperForm> form) {
         for (WrapperForm item : form) {
             // Criar usuario
-            // Chave estrangeira
-            Long idTypeGender = null;
-            Long idLocationType = null;
-            TypeState typeState = null;
-            Long idTypeTimezone = null;
+
             // Dados
             String title = item.getName().title;
             String firstName = item.getName().first;
@@ -127,6 +128,12 @@ public class UserService {
             LocalDateTime birthday = item.getDob().date;
             LocalDateTime registered = item.getRegistered().date;
 
+            // Chaves estrangeiras e objetos a serem resolvidos
+            Long idTypeGender = null;
+            Long idLocationType = null;
+            Long idTypeTimezone = null;
+            TypeState typeState = null;
+
             // Resolução genero
             System.out.println("Buscando por gênero: " + item.getGender());
             Optional<TypeGender> typeGender = this.typeGenderRepository.findByDescription(item.getGender());
@@ -135,8 +142,9 @@ public class UserService {
             } else {
                 idTypeGender =  this.typeGenderRepository.findByDescription("Nao declarado").get().getId();
             }
+
             // Resolucao de tipo de localizacao
-            System.out.println("Buscando por latitude e longitude: " + latitude + longitude);
+            System.out.println("Buscando por latitude e longitude: " + latitude + " " + longitude);
             if(latitude == null && longitude == null) {
                 if(latitude > -46.361899 && latitude < -34.276938 && longitude < -2.196998 && longitude <  -15.411580  ) {
                     //ESPECIAL
@@ -152,18 +160,17 @@ public class UserService {
                     idLocationType =  this.typeLocationRepository.findByDescription("Trabalhoso").get().getId();
                 }
             }
-            // --------------------------------
 
-            /* 
-            // Resolucao de estado
-            System.out.println("Buscando por estado: " + item.location.state);
-            Optional<TypeState> typeState = this.typeStateRepository.findByDescription(item.location.state);
+            // Resolução estado
+            System.out.println("Buscando por estado: " + item.getLocation().state);
+
+            Optional<TypeState> optionalTypeState = this.typeStateRepository.findByDescription(item.getLocation().state);
             if(typeGender.isPresent()) {
-                idTypeState = typeGender.get().getId();
+                typeState = optionalTypeState.get();
             } else {
-                idTypeState =  this.typeGenderRepository.findByDescription("Nao declarado").get().getId();
+                typeState =  this.typeStateRepository.findByDescription("Nao declarado").get();
             }
-*/
+
             // Resolucao de TimeZone
             System.out.println("Buscando por TimeZone: " + item.location.timezone.offset + item.location.timezone.description);
             Optional<TypeTimeZone> typeTimezone = this.typeTimeZoneRepository.findByTimeZoneOffset(item.location.timezone.offset);
@@ -176,19 +183,25 @@ public class UserService {
                     idTypeTimezone =  this.typeTimeZoneRepository.findByTimezoneDescription("Nao declarado").get().getId();
                 }
             }
-
-
             // Salvar usuario novo
             User user = new User(idTypeGender,  title,  firstName,  lastName,  idLocationType,  street,  city,  typeState,  postcode, latitude, longitude,  idTypeTimezone,  email,  birthday,  registered);
             userRepository.save(user);
-    //          Postar imagem (se existente)
-    //          Picture newRegister = new Picture(user, form);
-    //          pictureRepository.save(newRegister);
-    //
-    //            // Postar telefone (se existente)
-    //          PhoneNumber newRegister = new PhoneNumber(user, form);
-    //          phoneNumberRepository.save(newRegister);
 
+            // Postar imagem (se existente)
+            if(item.getPicture().large != null || item.getPicture().medium != null || item.getPicture().thumbnail != null ){
+                Picture newRegister = new Picture(user,  item.getPicture().large, item.getPicture().medium, item.getPicture().thumbnail );
+                pictureRepository.save(newRegister);
+            }
+
+            // Postar telefone (se existente)
+            if(item.getPhone() != null ) {
+                PhoneNumber newPhoneFixo = new PhoneNumber(user,  item.getPhone() , 1L);
+                phoneNumberRepository.save(newPhoneFixo);
+            }
+            if(item.getCell() != null ) {
+                PhoneNumber newPhoneMovel = new PhoneNumber(user,  item.getCell() , 2L);
+                phoneNumberRepository.save(newPhoneMovel);
+            }
         }
     }
 
