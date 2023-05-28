@@ -11,5 +11,6 @@ public class PhoneNumberForm {
     private Long userId;
     private String phoneNumber;
     private Long idPhoneNumberType;
+    private Long idPhoneNumberNationality;
 
 }

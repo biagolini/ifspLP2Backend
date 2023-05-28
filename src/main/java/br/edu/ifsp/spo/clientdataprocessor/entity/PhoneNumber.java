@@ -29,6 +29,9 @@ public class PhoneNumber {
     @Column(name = "idPhoneNumberType")
     private Long idPhoneNumberType;
 
+    @Column(name = "idPhoneNumberNationality")
+    private Long idPhoneNumberNationality;
+
     @Column(name = "stActive")
     private Boolean isActive;
 
@@ -39,10 +42,11 @@ public class PhoneNumber {
         this.isActive = true;
     }
 
-    public PhoneNumber(User user, String phoneNumber, Long idPhoneNumberType) {
+    public PhoneNumber(User user, String phoneNumber, Long idPhoneNumberType, Long idPhoneNumberNationality) {
         this.user = user;
         this.phoneNumber = phoneNumber;
         this.idPhoneNumberType = idPhoneNumberType;
+        this.idPhoneNumberNationality = idPhoneNumberNationality;
         this.isActive = true;
     }
 
@@ -51,6 +55,7 @@ public class PhoneNumber {
         this.user = user;
         this.phoneNumber = form.getPhoneNumber();
         this.idPhoneNumberType = form.getIdPhoneNumberType();
+        this.idPhoneNumberNationality = form.getIdPhoneNumberType();
     }
 
 }

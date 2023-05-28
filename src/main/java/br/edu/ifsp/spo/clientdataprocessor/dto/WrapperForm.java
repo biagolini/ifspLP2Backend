@@ -1,6 +1,6 @@
 package br.edu.ifsp.spo.clientdataprocessor.dto;
 
-import br.edu.ifsp.spo.clientdataprocessor.utils.ReadLocalDateTime;
+import br.edu.ifsp.spo.clientdataprocessor.util.ReadLocalDateTimeUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +22,7 @@ public class WrapperForm {
     public String phone;
     public String cell;
     public Picture picture;
+    public String nationality;
 
 
     @Setter
@@ -90,7 +91,7 @@ public class WrapperForm {
 
         public Dob(CSVRecord record) {
             try {
-                this.date = ReadLocalDateTime.fromObject(record.get("dob.date"));
+                this.date = ReadLocalDateTimeUtil.fromObject(record.get("dob.date"));
                 this.age = Integer.parseInt(record.get("dob.age"));
             } catch (
                     DateTimeParseException e) {
@@ -108,7 +109,7 @@ public class WrapperForm {
 
         public Registered(CSVRecord record) {
             try {
-                this.date = ReadLocalDateTime.fromObject(record.get("Registered.date"));
+                this.date = ReadLocalDateTimeUtil.fromObject(record.get("Registered.date"));
                 this.age = Integer.parseInt(record.get("Registered.age"));
             } catch (DateTimeParseException e) {
                 throw new IllegalArgumentException("Invalid date format in CSV: " + record.get("Registered.date"), e);
@@ -141,6 +142,7 @@ public class WrapperForm {
         this.phone = record.get("phone");
         this.cell = record.get("cell");
         this.picture = new Picture(record);
+        this.nationality = record.get("nationality");
     }
 
 

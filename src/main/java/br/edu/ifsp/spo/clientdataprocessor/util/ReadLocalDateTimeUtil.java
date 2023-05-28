@@ -1,4 +1,4 @@
-package br.edu.ifsp.spo.clientdataprocessor.utils;
+package br.edu.ifsp.spo.clientdataprocessor.util;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -6,7 +6,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class ReadLocalDateTime {
+public class ReadLocalDateTimeUtil {
 
     public static LocalDateTime fromObject(Object object) throws DateTimeParseException {
         if (object instanceof LocalDateTime) {

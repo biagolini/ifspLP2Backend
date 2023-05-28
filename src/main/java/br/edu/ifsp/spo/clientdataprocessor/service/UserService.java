@@ -14,6 +14,7 @@ import br.edu.ifsp.spo.clientdataprocessor.repository.PictureRepository;
 import br.edu.ifsp.spo.clientdataprocessor.repository.UserRepository;
 import br.edu.ifsp.spo.clientdataprocessor.repository.enumeration.*;
 import br.edu.ifsp.spo.clientdataprocessor.repository.specifications.UserSpecification;
+import br.edu.ifsp.spo.clientdataprocessor.util.PhoneNumberUtil;
 import lombok.AllArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -43,13 +44,11 @@ public class UserService {
 
     private final PhoneNumberRepository phoneNumberRepository;
 
+    private final TypePhoneNationalityRepository typePhoneNationalityRepository;
+
     private final TypeGenderRepository typeGenderRepository;
 
     private final TypeLocationRepository typeLocationRepository;
-
-    private final TypePhoneNumberRepository typePhoneNumberRepository;
-
-    private final TypeRegionRepository typeRegionRepository;
 
    private final TypeStateRepository typeStateRepository;
 
@@ -121,6 +120,7 @@ public class UserService {
             String street = item.getLocation().street;
             String city = item.getLocation().city;
             String postcode = item.getLocation().postcode;
+            String nationality = item.getNationality();
             Double latitude = null;
             Double longitude = null;
             try {
@@ -199,11 +199,13 @@ public class UserService {
 
             // Postar telefone (se existente)
             if(item.getPhone() != null ) {
-                PhoneNumber newPhoneFixo = new PhoneNumber(user,  item.getPhone() , 1L);
+                PhoneNumberUtil formattedPhone = new PhoneNumberUtil(this.typePhoneNationalityRepository, item.getPhone(), nationality );
+                PhoneNumber newPhoneFixo = new PhoneNumber(user,  formattedPhone.getPhoneNumber() , 1L, formattedPhone.getIdPhoneNumberNationality());
                 phoneNumberRepository.save(newPhoneFixo);
             }
             if(item.getCell() != null ) {
-                PhoneNumber newPhoneMovel = new PhoneNumber(user,  item.getCell() , 2L);
+                PhoneNumberUtil formattedPhone = new PhoneNumberUtil(this.typePhoneNationalityRepository, item.getPhone(), nationality );
+                PhoneNumber newPhoneMovel = new PhoneNumber(user,  formattedPhone.getPhoneNumber()  , 2L, formattedPhone.getIdPhoneNumberNationality());
                 phoneNumberRepository.save(newPhoneMovel);
             }
         }
