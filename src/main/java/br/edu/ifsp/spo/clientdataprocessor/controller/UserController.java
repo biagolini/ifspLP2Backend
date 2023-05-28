@@ -95,45 +95,20 @@ public class UserController {
     }
 
 
-//    @PostMapping("/csv")
-//    public ResponseEntity<?> createCustomerByCsv(@RequestParam("file") MultipartFile file) {
-//        if (file.isEmpty()) {
-//            return new ResponseEntity<>("Please select a CSV file to upload.", HttpStatus.BAD_REQUEST);
-//        } else {
-//            try {
-//                // Create a Reader to read the file
-//                Reader reader = new InputStreamReader(file.getInputStream());
-//
-//                // Use OpenCSV to parse the file
-//                CsvToBean<CSVForm> csvToBean = new CsvToBeanBuilder<CSVForm>(reader)
-//                        .withType(CSVForm.class)
-//                        .withIgnoreLeadingWhiteSpace(true)
-//                        .build();
-//
-//                // Loop through beans
-//                Iterator<CSVForm> csvUserIterator = csvToBean.iterator();
-//
-//                while (csvUserIterator.hasNext()) {
-//                    CSVForm csvForm = csvUserIterator.next();
-//
-//                    // Convert the CSVForm to WrapperForm
-//                    WrapperForm form = WrapperForm.toWrapperForm(csvForm);
-//
-//                    // Print the form
-//                    ObjectMapper mapper = new ObjectMapper();
-//                    String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(form);
-//                    System.out.println(json);
-//                }
-//
-//                // Close the Reader
-//                reader.close();
-//
-//                return new ResponseEntity<>(HttpStatus.OK);
-//            } catch (Exception e) {
-//                return new ResponseEntity<>("Error while processing file: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-//            }
-//        }
-//    }
+    @PostMapping("/csv")
+    public ResponseEntity<?> createCustomerByCsv(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return new ResponseEntity<>("Please select a CSV file to upload.", HttpStatus.BAD_REQUEST);
+        } else {
+            try {
+                this.userService.createCustomerByCsv(file);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity<>("Error while processing file: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+        }
+    }
+
 
 
     @DeleteMapping("/{id}")

@@ -15,13 +15,25 @@ import br.edu.ifsp.spo.clientdataprocessor.repository.UserRepository;
 import br.edu.ifsp.spo.clientdataprocessor.repository.enumeration.*;
 import br.edu.ifsp.spo.clientdataprocessor.repository.specifications.UserSpecification;
 import lombok.AllArgsConstructor;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
+
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,8 +58,6 @@ public class UserService {
    private final TypeStateRepository typeStateRepository;
 
     private final TypeTimeZoneRepository typeTimeZoneRepository;
-
-
 
 
     public Page<User> findAll(Pageable pageable) {
@@ -125,8 +135,8 @@ public class UserService {
                 System.out.println("Erro ao ler dados de Latidute/Longitude");
             }
             String email = item.getEmail();
-            LocalDateTime birthday = item.getDob().date;
-            LocalDateTime registered = item.getRegistered().date;
+            LocalDateTime birthday = LocalDateTime.from(item.getDob().date);
+            LocalDateTime registered = LocalDateTime.from(item.getRegistered().date);
 
             // Chaves estrangeiras e objetos a serem resolvidos
             Long idTypeGender = null;
@@ -145,19 +155,27 @@ public class UserService {
 
             // Resolucao de tipo de localizacao
             System.out.println("Buscando por latitude e longitude: " + latitude + " " + longitude);
-            if(latitude == null && longitude == null) {
+            if(latitude != null && longitude != null) {
                 if(latitude > -46.361899 && latitude < -34.276938 && longitude < -2.196998 && longitude <  -15.411580  ) {
                     //ESPECIAL
+                    System.out.println("ESPECIAL 1");
                     idLocationType =  this.typeLocationRepository.findByDescription("Especial").get().getId();
+                    System.out.println(idLocationType);
                 } else if(latitude > -52.997614 && latitude < -44.428305 && longitude < -19.766959 && longitude <  -23.966413  ) {
                     //ESPECIAL
+                    System.out.println("ESPECIAL 2");
                     idLocationType =  this.typeLocationRepository.findByDescription("Especial").get().getId();
+                    System.out.println(idLocationType);
                 } else if(latitude > -54.777426 && latitude < -46.603598 && longitude < -26.155681 && longitude < -34.016466  ) {
                     // NORMAL
+                    System.out.println("NORMAL");
                     idLocationType =  this.typeLocationRepository.findByDescription("Normal").get().getId();
+                    System.out.println(idLocationType);
                 } else {
                     // TRABALHOSO
+                    System.out.println("TRABALHOSO");
                     idLocationType =  this.typeLocationRepository.findByDescription("Trabalhoso").get().getId();
+                    System.out.println(idLocationType);
                 }
             }
 
@@ -205,9 +223,26 @@ public class UserService {
         }
     }
 
-    public void createCustomerByCsv(List<WrapperForm> form) {
-        System.out.println(form);
+    public void createCustomerByCsv(MultipartFile file) throws IOException, RuntimeException {
+        List<WrapperForm> formList = new ArrayList<>();
+
+        try (Reader reader = new InputStreamReader(file.getInputStream());
+             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader().withIgnoreHeaderCase().withTrim());) {
+
+            for (CSVRecord record : csvParser) {
+                try {
+                    WrapperForm form = new WrapperForm(record);
+                    formList.add(form);
+                } catch (IllegalArgumentException e) {
+                    throw new RuntimeException("Erro ao processar registro CSV: " + e.getMessage(), e);
+                }
+            }
+        }
+
+        this.createUserByJson(formList);
     }
+
+
 
 
 
