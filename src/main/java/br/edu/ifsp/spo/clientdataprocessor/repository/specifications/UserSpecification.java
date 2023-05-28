@@ -2,7 +2,6 @@ package br.edu.ifsp.spo.clientdataprocessor.repository.specifications;
 
 import br.edu.ifsp.spo.clientdataprocessor.entity.User;
 import br.edu.ifsp.spo.clientdataprocessor.entity.User_;
-
 import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeState_;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;

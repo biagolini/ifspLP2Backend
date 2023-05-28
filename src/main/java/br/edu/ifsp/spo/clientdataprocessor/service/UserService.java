@@ -16,6 +16,7 @@ import br.edu.ifsp.spo.clientdataprocessor.repository.enumeration.*;
 import br.edu.ifsp.spo.clientdataprocessor.repository.specifications.UserSpecification;
 import lombok.AllArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +24,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
-
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -118,7 +114,6 @@ public class UserService {
     public void createUserByJson(List<WrapperForm> form) {
         for (WrapperForm item : form) {
             // Criar usuario
-
             // Dados
             String title = item.getName().title;
             String firstName = item.getName().first;
@@ -145,7 +140,7 @@ public class UserService {
             TypeState typeState = null;
 
             // Resolução genero
-            System.out.println("Buscando por gênero: " + item.getGender());
+            System.out.println("Buscando gênero = " + item.getGender());
             Optional<TypeGender> typeGender = this.typeGenderRepository.findByDescription(item.getGender());
             if(typeGender.isPresent()) {
                 idTypeGender = typeGender.get().getId();
@@ -154,34 +149,25 @@ public class UserService {
             }
 
             // Resolucao de tipo de localizacao
-            System.out.println("Buscando por latitude e longitude: " + latitude + " " + longitude);
+            System.out.println("Buscando latitude = " + latitude + " e longitude = " + longitude);
             if(latitude != null && longitude != null) {
                 if(latitude > -46.361899 && latitude < -34.276938 && longitude < -2.196998 && longitude <  -15.411580  ) {
                     //ESPECIAL
-                    System.out.println("ESPECIAL 1");
                     idLocationType =  this.typeLocationRepository.findByDescription("Especial").get().getId();
-                    System.out.println(idLocationType);
                 } else if(latitude > -52.997614 && latitude < -44.428305 && longitude < -19.766959 && longitude <  -23.966413  ) {
                     //ESPECIAL
-                    System.out.println("ESPECIAL 2");
                     idLocationType =  this.typeLocationRepository.findByDescription("Especial").get().getId();
-                    System.out.println(idLocationType);
                 } else if(latitude > -54.777426 && latitude < -46.603598 && longitude < -26.155681 && longitude < -34.016466  ) {
                     // NORMAL
-                    System.out.println("NORMAL");
                     idLocationType =  this.typeLocationRepository.findByDescription("Normal").get().getId();
-                    System.out.println(idLocationType);
                 } else {
                     // TRABALHOSO
-                    System.out.println("TRABALHOSO");
                     idLocationType =  this.typeLocationRepository.findByDescription("Trabalhoso").get().getId();
-                    System.out.println(idLocationType);
                 }
             }
 
             // Resolução estado
-            System.out.println("Buscando por estado: " + item.getLocation().state);
-
+            System.out.println("Buscando estado = " + item.getLocation().state);
             Optional<TypeState> optionalTypeState = this.typeStateRepository.findByDescription(item.getLocation().state);
             if(typeGender.isPresent()) {
                 typeState = optionalTypeState.get();
@@ -190,7 +176,7 @@ public class UserService {
             }
 
             // Resolucao de TimeZone
-            System.out.println("Buscando por TimeZone: " + item.location.timezone.offset + item.location.timezone.description);
+            System.out.println("Buscando Timezone offset = " + item.location.timezone.offset + " e  description = " + item.location.timezone.description);
             Optional<TypeTimeZone> typeTimezone = this.typeTimeZoneRepository.findByTimeZoneOffset(item.location.timezone.offset);
             if(typeTimezone.isPresent()) {
                 idTypeTimezone = typeTimezone.get().getId();
@@ -224,26 +210,20 @@ public class UserService {
     }
 
     public void createCustomerByCsv(MultipartFile file) throws IOException, RuntimeException {
-        List<WrapperForm> formList = new ArrayList<>();
-
-        try (Reader reader = new InputStreamReader(file.getInputStream());
+        List<WrapperForm> form = new ArrayList<>();
+        try (Reader reader = new InputStreamReader(file.getInputStream(), "ISO-8859-1");
              CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader().withIgnoreHeaderCase().withTrim());) {
 
             for (CSVRecord record : csvParser) {
                 try {
-                    WrapperForm form = new WrapperForm(record);
-                    formList.add(form);
+                    WrapperForm item = new WrapperForm(record);
+                    form.add(item);
                 } catch (IllegalArgumentException e) {
                     throw new RuntimeException("Erro ao processar registro CSV: " + e.getMessage(), e);
                 }
             }
         }
-
-        this.createUserByJson(formList);
+        this.createUserByJson(form);
     }
-
-
-
-
 
 }

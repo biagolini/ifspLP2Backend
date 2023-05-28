@@ -1,6 +1,5 @@
 package br.edu.ifsp.spo.clientdataprocessor.controller;
 
-import br.edu.ifsp.spo.clientdataprocessor.dto.PhoneNumberDto;
 import br.edu.ifsp.spo.clientdataprocessor.dto.PictureDto;
 import br.edu.ifsp.spo.clientdataprocessor.dto.PictureForm;
 import br.edu.ifsp.spo.clientdataprocessor.service.PictureService;
@@ -14,8 +13,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController

@@ -1,15 +1,12 @@
 package br.edu.ifsp.spo.clientdataprocessor.dto;
 
 import br.edu.ifsp.spo.clientdataprocessor.utils.ReadLocalDateTime;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.csv.CSVRecord;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 
 @Getter

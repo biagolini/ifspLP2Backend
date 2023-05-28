@@ -1,15 +1,12 @@
 package br.edu.ifsp.spo.clientdataprocessor.service;
 
-import br.edu.ifsp.spo.clientdataprocessor.dto.PhoneNumberDto;
 import br.edu.ifsp.spo.clientdataprocessor.dto.PictureDto;
 import br.edu.ifsp.spo.clientdataprocessor.dto.PictureForm;
-import br.edu.ifsp.spo.clientdataprocessor.entity.PhoneNumber;
 import br.edu.ifsp.spo.clientdataprocessor.entity.Picture;
 import br.edu.ifsp.spo.clientdataprocessor.entity.User;
 import br.edu.ifsp.spo.clientdataprocessor.repository.PictureRepository;
 import br.edu.ifsp.spo.clientdataprocessor.repository.UserRepository;
 import br.edu.ifsp.spo.clientdataprocessor.repository.specifications.PictureSpecification;
-
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor

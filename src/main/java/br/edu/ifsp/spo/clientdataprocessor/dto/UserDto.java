@@ -1,9 +1,6 @@
 package br.edu.ifsp.spo.clientdataprocessor.dto;
 
-import br.edu.ifsp.spo.clientdataprocessor.entity.PhoneNumber;
-import br.edu.ifsp.spo.clientdataprocessor.entity.Picture;
 import br.edu.ifsp.spo.clientdataprocessor.entity.User;
-import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeState;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

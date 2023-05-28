@@ -1,6 +1,8 @@
 package br.edu.ifsp.spo.clientdataprocessor.repository.specifications;
 
-import br.edu.ifsp.spo.clientdataprocessor.entity.*;
+import br.edu.ifsp.spo.clientdataprocessor.entity.Picture;
+import br.edu.ifsp.spo.clientdataprocessor.entity.Picture_;
+import br.edu.ifsp.spo.clientdataprocessor.entity.User_;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 

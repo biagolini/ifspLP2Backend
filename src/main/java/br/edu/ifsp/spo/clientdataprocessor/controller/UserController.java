@@ -1,7 +1,5 @@
 package br.edu.ifsp.spo.clientdataprocessor.controller;
 
-import au.com.bytecode.opencsv.CSVReader;
-import br.edu.ifsp.spo.clientdataprocessor.dto.CSVForm;
 import br.edu.ifsp.spo.clientdataprocessor.dto.UserDto;
 import br.edu.ifsp.spo.clientdataprocessor.dto.UserForm;
 import br.edu.ifsp.spo.clientdataprocessor.dto.WrapperForm;
@@ -16,27 +14,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.Iterator;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.web.multipart.MultipartFile;
 
-
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.List;
 
 @RestController
@@ -94,7 +73,6 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
     @PostMapping("/csv")
     public ResponseEntity<?> createCustomerByCsv(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -108,8 +86,6 @@ public class UserController {
             }
         }
     }
-
-
 
     @DeleteMapping("/{id}")
     @Transactional
