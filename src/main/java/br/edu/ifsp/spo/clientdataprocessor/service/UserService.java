@@ -141,6 +141,13 @@ public class UserService {
 
             // Resolução genero
             System.out.println("Buscando gênero = " + item.getGender());
+            // Mapeando strings para um formato uniforme
+            String genderDescription = item.getGender();
+            if (genderDescription.equalsIgnoreCase("Male")) {
+                genderDescription = "M";
+            } else if (genderDescription.equalsIgnoreCase("Female")) {
+                genderDescription = "F";
+            }
             Optional<TypeGender> typeGender = this.typeGenderRepository.findByDescription(item.getGender());
             if(typeGender.isPresent()) {
                 idTypeGender = typeGender.get().getId();

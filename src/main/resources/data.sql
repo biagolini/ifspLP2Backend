@@ -129,8 +129,8 @@ INSERT INTO tbl_type_phone_number (ds_type, st_active) VALUES
                                                            ('Nao declarado', true);
 
 INSERT INTO tbl_type_gender (ds_type, st_active) VALUES
-                                                     ('Male', true),
-                                                     ('Female', true),
+                                                     ('M', true),
+                                                     ('F', true),
                                                      ('Nao declarado', true);
 
 INSERT INTO tbl_type_timezone (ds_timezone_offset, ds_timezone_description, st_active) VALUES

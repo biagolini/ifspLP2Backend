@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.List;
 
@@ -75,17 +76,24 @@ public class UserController {
 
     @PostMapping("/csv")
     public ResponseEntity<?> createCustomerByCsv(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return new ResponseEntity<>("Please select a CSV file to upload.", HttpStatus.BAD_REQUEST);
-        } else {
-            try {
+        try {
+            if (file.isEmpty()) {
+                return new ResponseEntity<>("Uploaded file is empty.", HttpStatus.BAD_REQUEST);
+            } else {
                 this.userService.createCustomerByCsv(file);
                 return new ResponseEntity<>(HttpStatus.OK);
-            } catch (Exception e) {
-                return new ResponseEntity<>("Error while processing file: " + e.getMessage(), HttpStatus.BAD_REQUEST);
             }
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error while processing file: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<String> handleMissingFileError(MissingServletRequestPartException ex) {
+        return new ResponseEntity<>("Please include a file in your request.", HttpStatus.BAD_REQUEST);
+    }
+
+
 
     @DeleteMapping("/{id}")
     @Transactional
