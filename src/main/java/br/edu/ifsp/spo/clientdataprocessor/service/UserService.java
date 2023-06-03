@@ -28,14 +28,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import java.text.Normalizer;
 @AllArgsConstructor
 @Service
 public class UserService {
@@ -164,24 +164,54 @@ public class UserService {
 
             // Resolução estado
             System.out.println("Buscando estado = " + item.getLocation().state);
+
+            String descricaoEstado = item.getLocation().state;
+            String estadoSemAcentos = removerCaracteresEspeciais(descricaoEstado);
+            String estadoEmIngles = traduzirCaracteresEspeciais(estadoSemAcentos);
+
             Optional<TypeState> optionalTypeState = this.typeStateRepository.findByDescription(item.getLocation().state);
-            if(typeGender.isPresent()) {
+            if (optionalTypeState.isPresent()) {
+                typeState = optionalTypeState.get();
+            } else if ((optionalTypeState = this.typeStateRepository.findByDescription(estadoSemAcentos)).isPresent()) {
+                typeState = optionalTypeState.get();
+            } else if ((optionalTypeState = this.typeStateRepository.findByDescription(estadoEmIngles)).isPresent()) {
                 typeState = optionalTypeState.get();
             } else {
-                typeState =  this.typeStateRepository.findByDescription("Nao declarado").get();
+                typeState = this.typeStateRepository.findByDescription("Nao declarado").get();
             }
 
             // Resolucao de TimeZone
-            System.out.println("Buscando Timezone offset = " + item.location.timezone.offset + " e  description = " + item.location.timezone.description);
-            Optional<TypeTimeZone> typeTimezone = this.typeTimeZoneRepository.findByTimeZoneOffset(item.location.timezone.offset);
-            if(typeTimezone.isPresent()) {
-                idTypeTimezone = typeTimezone.get().getId();
-            } else {
-                typeTimezone = this.typeTimeZoneRepository.findByTimezoneDescription(item.location.timezone.description);
+            try {
+                // Resolucao de TimeZone
+                String offset = item.location.timezone.offset;
 
-                if(typeTimezone.isEmpty()) {
-                    idTypeTimezone =  this.typeTimeZoneRepository.findByTimezoneDescription("Nao declarado").get().getId();
+                // Substituindo o possivel sinal negativo para facilitar o parseamento
+                offset = offset.replace("-", "");
+
+                // Split em horas e minutos
+                String[] offsetParts = offset.split(":");
+                int hours = Integer.parseInt(offsetParts[0]);
+                int minutes = Integer.parseInt(offsetParts[1]);
+
+                // Checagem se o offset está dentro do range permitido
+                if (hours < 0 || hours > 12 || minutes < 0 || minutes > 59) {
+                    throw new DateTimeParseException("Offset fora do range permitido", offset, 0);
                 }
+
+                System.out.println("Buscando Timezone offset = " + item.location.timezone.offset + " e  description = " + item.location.timezone.description);
+                Optional<TypeTimeZone> typeTimezone = this.typeTimeZoneRepository.findByTimeZoneOffset(item.location.timezone.offset);
+                if(typeTimezone.isPresent()) {
+                    idTypeTimezone = typeTimezone.get().getId();
+                } else {
+                    typeTimezone = this.typeTimeZoneRepository.findByTimezoneDescription(item.location.timezone.description);
+
+                    if(typeTimezone.isEmpty()) {
+                        idTypeTimezone =  this.typeTimeZoneRepository.findByTimezoneDescription("Nao declarado").get().getId();
+                    }
+                }
+            } catch (DateTimeParseException e) {
+                System.out.println("Offset inválido. Definindo para nulo.");
+                item.location.timezone.offset = null;
             }
             // Salvar/atualizar usuario
             Optional<User> conflictTestEmail = userRepository.findByEmail(item.getEmail());
@@ -267,6 +297,7 @@ public class UserService {
         this.createUserByJson(form);
     }
 
+
     public TypeLocationDto resolveLocation(Double latitude, Double longitude) {
         TypeLocation typeLocation = new TypeLocation();
         if(latitude != null && longitude != null) {
@@ -299,5 +330,39 @@ public class UserService {
         }
         TypeLocationDto response = new TypeLocationDto(typeLocation);
         return response;
+    }
+
+    public static String removerCaracteresEspeciais(String input) {
+        String semAcentos = Normalizer.normalize(input, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+
+        String semCaracteresEspeciais = semAcentos
+                .replaceAll("[^\\p{Alnum}]+", "_")
+                .replaceAll("_+", "_")
+                .replaceAll("^_|_$", "");
+
+        String lowercase = semCaracteresEspeciais.toLowerCase();
+
+        return lowercase;
+    }
+
+    public static String traduzirCaracteresEspeciais(String input) {
+        // Mapear caracteres especiais para caracteres equivalentes em inglês
+        String traducao = input
+                .replaceAll("á", "a")
+                .replaceAll("à", "a")
+                .replaceAll("ã", "a")
+                .replaceAll("â", "a")
+                .replaceAll("é", "e")
+                .replaceAll("ê", "e")
+                .replaceAll("í", "i")
+                .replaceAll("ó", "o")
+                .replaceAll("ô", "o")
+                .replaceAll("õ", "o")
+                .replaceAll("ú", "u")
+                .replaceAll("ü", "u")
+                .replaceAll("ç", "c");
+
+        return traducao;
     }
 }
