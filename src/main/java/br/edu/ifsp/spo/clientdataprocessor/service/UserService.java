@@ -3,10 +3,12 @@ package br.edu.ifsp.spo.clientdataprocessor.service;
 import br.edu.ifsp.spo.clientdataprocessor.dto.UserDto;
 import br.edu.ifsp.spo.clientdataprocessor.dto.UserForm;
 import br.edu.ifsp.spo.clientdataprocessor.dto.WrapperForm;
+import br.edu.ifsp.spo.clientdataprocessor.dto.enumeration.TypeLocationDto;
 import br.edu.ifsp.spo.clientdataprocessor.entity.PhoneNumber;
 import br.edu.ifsp.spo.clientdataprocessor.entity.Picture;
 import br.edu.ifsp.spo.clientdataprocessor.entity.User;
 import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeGender;
+import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeLocation;
 import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeState;
 import br.edu.ifsp.spo.clientdataprocessor.entity.enumeration.TypeTimeZone;
 import br.edu.ifsp.spo.clientdataprocessor.repository.PhoneNumberRepository;
@@ -50,7 +52,7 @@ public class UserService {
 
     private final TypeLocationRepository typeLocationRepository;
 
-   private final TypeStateRepository typeStateRepository;
+    private final TypeStateRepository typeStateRepository;
 
     private final TypeTimeZoneRepository typeTimeZoneRepository;
 
@@ -87,7 +89,8 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         TypeState typeState = typeStateRepository.findById(form.getIdTypeState()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-        User newRegister = new User(form, typeState);
+        Long idLocationType = this.resolveLocationType(form.getLatitude(),  form.getLongitude());
+        User newRegister = new User(form, typeState, idLocationType);
         userRepository.save(newRegister);
     }
 
@@ -102,10 +105,10 @@ public class UserService {
         if(conflict.isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-
         User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         TypeState typeState = typeStateRepository.findById(form.getIdTypeState()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-        user.update(form,typeState);
+        Long idLocationType = this.resolveLocationType(form.getLatitude(),  form.getLongitude());
+        user.update(form,typeState, idLocationType);
         userRepository.save(user);
     }
 
@@ -157,21 +160,7 @@ public class UserService {
 
             // Resolucao de tipo de localizacao
             System.out.println("Buscando latitude = " + latitude + " e longitude = " + longitude);
-            if(latitude != null && longitude != null) {
-                if(latitude > -46.361899 && latitude < -34.276938 && longitude < -2.196998 && longitude <  -15.411580  ) {
-                    //ESPECIAL
-                    idLocationType =  this.typeLocationRepository.findByDescription("Especial").get().getId();
-                } else if(latitude > -52.997614 && latitude < -44.428305 && longitude < -19.766959 && longitude <  -23.966413  ) {
-                    //ESPECIAL
-                    idLocationType =  this.typeLocationRepository.findByDescription("Especial").get().getId();
-                } else if(latitude > -54.777426 && latitude < -46.603598 && longitude < -26.155681 && longitude < -34.016466  ) {
-                    // NORMAL
-                    idLocationType =  this.typeLocationRepository.findByDescription("Normal").get().getId();
-                } else {
-                    // TRABALHOSO
-                    idLocationType =  this.typeLocationRepository.findByDescription("Trabalhoso").get().getId();
-                }
-            }
+            idLocationType = this.resolveLocationType(latitude,  longitude);
 
             // Resolução estado
             System.out.println("Buscando estado = " + item.getLocation().state);
@@ -194,8 +183,31 @@ public class UserService {
                     idTypeTimezone =  this.typeTimeZoneRepository.findByTimezoneDescription("Nao declarado").get().getId();
                 }
             }
-            // Salvar usuario novo
-            User user = new User(idTypeGender,  title,  firstName,  lastName,  idLocationType,  street,  city,  typeState,  postcode, latitude, longitude,  idTypeTimezone,  email,  birthday,  registered);
+            // Salvar/atualizar usuario
+            Optional<User> conflictTestEmail = userRepository.findByEmail(item.getEmail());
+            User user = new User();
+            if(conflictTestEmail.isPresent() ) {
+                // Fazer update
+                user = conflictTestEmail.get();
+                if (idTypeGender != null ) user.setIdTypeGender(idTypeGender);
+                if (title != null ) user.setTitle(title);
+                if (firstName != null ) user.setFirstName(firstName);
+                if (lastName != null ) user.setLastName(lastName);
+                if (idLocationType != null ) user.setIdLocationType(idLocationType);
+                if (street != null ) user.setStreet(street);
+                if (city != null ) user.setCity(city);
+                if (typeState != null ) user.setTypeState(typeState);
+                if (postcode != null ) user.setPostcode(postcode);
+                if (latitude != null ) user.setLatitude(latitude);
+                if (longitude != null ) user.setLongitude(longitude);
+                if (idTypeTimezone != null ) user.setIdTypeTimezone(idTypeTimezone);
+                if (birthday != null ) user.setBirthday(birthday);
+                if (registered != null ) user.setRegistered(registered);
+                System.out.println("USER " + conflictTestEmail.get() + "WAS UPDATED");
+            } else {
+                user = new User(idTypeGender,  title,  firstName,  lastName,  idLocationType,  street,  city,  typeState,  postcode, latitude, longitude,  idTypeTimezone,  email,  birthday,  registered);
+            }
+
             userRepository.save(user);
 
             // Postar imagem (se existente)
@@ -218,6 +230,26 @@ public class UserService {
         }
     }
 
+    public Long resolveLocationType(Double latitude, Double longitude){
+        Long idLocationType = null;
+        if(latitude != null && longitude != null) {
+            if(latitude > -46.361899 && latitude < -34.276938 && longitude < -2.196998 && longitude <  -15.411580  ) {
+                //ESPECIAL
+                idLocationType =  this.typeLocationRepository.findByDescription("Especial").get().getId();
+            } else if(latitude > -52.997614 && latitude < -44.428305 && longitude < -19.766959 && longitude <  -23.966413  ) {
+                //ESPECIAL
+                idLocationType =  this.typeLocationRepository.findByDescription("Especial").get().getId();
+            } else if(latitude > -54.777426 && latitude < -46.603598 && longitude < -26.155681 && longitude < -34.016466  ) {
+                // NORMAL
+                idLocationType =  this.typeLocationRepository.findByDescription("Normal").get().getId();
+            } else {
+                // TRABALHOSO
+                idLocationType =  this.typeLocationRepository.findByDescription("Trabalhoso").get().getId();
+            }
+        }
+        return idLocationType;
+    }
+
     public void createCustomerByCsv(MultipartFile file) throws IOException, RuntimeException {
         List<WrapperForm> form = new ArrayList<>();
         try (Reader reader = new InputStreamReader(file.getInputStream(), "ISO-8859-1");
@@ -235,4 +267,37 @@ public class UserService {
         this.createUserByJson(form);
     }
 
+    public TypeLocationDto resolveLocation(Double latitude, Double longitude) {
+        TypeLocation typeLocation = new TypeLocation();
+        if(latitude != null && longitude != null) {
+            if(latitude < -34.276938 && latitude > -46.361899  && longitude < -2.196998 &&  longitude > -15.411580) {
+                //ESPECIAL
+                // Latitude  (NS) vai de -34.276938 ate -46.361899
+                // Longitude (LO) vai de -02.196998 ate -15.411580
+                System.out.println("Resolução 01 - especial");
+                typeLocation =  this.typeLocationRepository.findByDescription("Especial").get();
+
+            } else if(latitude < -44.428305 && latitude > -52.997614 && longitude < -19.766959 && longitude >  -23.966413) {
+                //ESPECIAL
+                // Latitude  (NS) vai de -44.428305 ate -52.997614
+                // Longitude (LO) vai de -19.766959 ate -23.966413
+                System.out.println("Resolução 02 - especial");
+                typeLocation =  this.typeLocationRepository.findByDescription("Especial").get();
+            } else if(latitude < -46.603598 && latitude > -54.777426 &&  longitude < -26.155681 && longitude < -34.016466) {
+                // NORMAL
+                // Latitude  (NS) vai de -46.603598 ate -54.777426
+                // Longitude (LO) vai de -26.155681 ate -34.016466
+                System.out.println("Resolução 03 - normal");
+                typeLocation =  this.typeLocationRepository.findByDescription("Normal").get();
+            } else {
+                // TRABALHOSO
+                // Latitude  (NS) vai de -44.428305 ate -52.997614
+                // Longitude (LO) vai de -19.766959 ate -23.966413
+                System.out.println("Resolução 04 - trabahoso");
+                typeLocation =  this.typeLocationRepository.findByDescription("Trabalhoso").get();
+            }
+        }
+        TypeLocationDto response = new TypeLocationDto(typeLocation);
+        return response;
+    }
 }

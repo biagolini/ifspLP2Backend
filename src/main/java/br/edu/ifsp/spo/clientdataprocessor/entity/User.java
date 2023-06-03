@@ -71,12 +71,12 @@ public class User {
     @Column(name = "stActive")
     private Boolean isActive;
 
-    public User(UserForm form, TypeState TypeState) {
+    public User(UserForm form, TypeState TypeState, Long idLocationType) {
         this.idTypeGender = form.getIdTypeGender();
         this.title = form.getTitle();
         this.firstName = form.getFirstName();
         this.lastName = form.getLastName();
-        this.idLocationType = form.getIdLocationType();
+        this.idLocationType = idLocationType;
         this.street = form.getStreet();
         this.city = form.getCity();
         this.typeState = TypeState;
@@ -90,12 +90,12 @@ public class User {
         this.isActive = true;
     }
 
-    public void update(UserForm form, TypeState TypeState) {
+    public void update(UserForm form, TypeState TypeState, Long idLocationType) {
         this.idTypeGender = form.getIdTypeGender();
         this.title = form.getTitle();
         this.firstName = form.getFirstName();
         this.lastName = form.getLastName();
-        this.idLocationType = form.getIdLocationType();
+        this.idLocationType = idLocationType;
         this.street = form.getStreet();
         this.city = form.getCity();
         this.typeState = TypeState;

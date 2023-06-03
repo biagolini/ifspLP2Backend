@@ -3,6 +3,7 @@ package br.edu.ifsp.spo.clientdataprocessor.controller;
 import br.edu.ifsp.spo.clientdataprocessor.dto.UserDto;
 import br.edu.ifsp.spo.clientdataprocessor.dto.UserForm;
 import br.edu.ifsp.spo.clientdataprocessor.dto.WrapperForm;
+import br.edu.ifsp.spo.clientdataprocessor.dto.enumeration.TypeLocationDto;
 import br.edu.ifsp.spo.clientdataprocessor.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -107,6 +108,16 @@ public class UserController {
     public ResponseEntity<?> updateCustomer(@PathVariable Long id, @RequestBody UserForm form) {
         this.userService.updateUser(id, form);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+   @GetMapping("/resolveLocation")
+    public @ResponseBody
+   ResponseEntity<?> resolveLocationType(
+            @RequestParam(required = true) Double latitude,
+            @RequestParam(required = true) Double longitude
+    ) {
+        TypeLocationDto response = this.userService.resolveLocation(latitude, longitude);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }
